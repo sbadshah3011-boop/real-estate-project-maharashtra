@@ -1,0 +1,9 @@
+{
+  "gmail_user": "sbadshah3011@gmail.com",
+  "gmail_app_password": "dsoy sruc pixc tcux",
+  "recipient_email": "sbadshah3011@gmail.com",
+  "send_time": "06:00",
+  "region": "Maharashtra",
+  "cities": ["Mumbai", "Pune", "Nagpur", "Nashik", "Thane", "Navi Mumbai", "Aurangabad", "Kolhapur"],
+  "dashboard_url": "http://localhost:5000"
+}

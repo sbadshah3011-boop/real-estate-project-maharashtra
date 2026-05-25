@@ -1,0 +1,69 @@
+{
+  "report_metadata": {
+    "title": "Pune Real Estate New Projects Intelligence",
+    "compiled_date": "2026-05-24",
+    "compiled_by": "AI Agent 1 — Projects Researcher",
+    "coverage_period": "2025–2026",
+    "total_projects": 41,
+    "micro_markets_covered": 18,
+    "data_sources": ["MagicBricks","99acres","Housing.com","Square Yards","NoBroker","JLL Homes","Cushman & Wakefield","CRE Matrix","Beyond Walls","Housiey","PropertyCrow","Developer official websites"]
+  },
+  "market_stats": {
+    "total_launches_2025": 64000,
+    "total_sold_2025": 81000,
+    "demand_supply_gap": "17,000 units — supports price appreciation",
+    "jan_may_2025_registrations": 99300,
+    "may_2025_registrations": 11930,
+    "jan_2026_registrations": 14527,
+    "q1_2026_new_launches": 11371,
+    "q1_2026_yoy_growth_pct": 8.2,
+    "avg_price_per_sqft_registration": 8700,
+    "avg_asking_price_per_sqft": 12961,
+    "avg_ticket_size_2025_lakhs": 78,
+    "stamp_duty_may_2025_crore": 421,
+    "stamp_duty_jan_2026_crore": 609,
+    "supply_mix_q1_2026": {
+      "mid_segment_pct": 46,
+      "high_end_luxury_pct": 38,
+      "affordable_pct": 10,
+      "others_pct": 6
+    },
+    "properties_above_1cr_pct": 19,
+    "properties_above_1cr_pct_prev_year": 14
+  },
+  "micro_market_pricing": {
+    "Hinjewadi":        {"price_sqft_range":"₹7,500–₹11,000","yoy_appreciation_pct":"8–12","rental_yield_pct":"4–6","segment":"Mid to Premium","demand_index":90},
+    "Baner":            {"price_sqft_range":"₹11,000–₹16,000","yoy_appreciation_pct":"6–9","rental_yield_pct":"3.5–5","segment":"Premium","demand_index":82},
+    "Balewadi":         {"price_sqft_range":"₹10,000–₹15,000","yoy_appreciation_pct":"7–10","rental_yield_pct":"3.5–5","segment":"Premium","demand_index":80},
+    "Wakad":            {"price_sqft_range":"₹9,000–₹13,000","yoy_appreciation_pct":"7–9","rental_yield_pct":"4–5","segment":"Mid-Premium","demand_index":78},
+    "Kharadi":          {"price_sqft_range":"₹9,000–₹14,000","yoy_appreciation_pct":"8–10","rental_yield_pct":"4.5–6","segment":"Premium","demand_index":88},
+    "Viman_Nagar":      {"price_sqft_range":"₹10,000–₹15,000","yoy_appreciation_pct":"6–8","rental_yield_pct":"3.5–5","segment":"Premium","demand_index":75},
+    "Koregaon_Park":    {"price_sqft_range":"₹14,000–₹22,000","yoy_appreciation_pct":"5–8","rental_yield_pct":"3–4","segment":"Luxury","demand_index":62},
+    "Kalyani_Nagar":    {"price_sqft_range":"₹12,000–₹18,000","yoy_appreciation_pct":"6–8","rental_yield_pct":"3–4.5","segment":"Premium-Luxury","demand_index":65},
+    "Hadapsar":         {"price_sqft_range":"₹7,500–₹12,000","yoy_appreciation_pct":"7–9","rental_yield_pct":"4–5","segment":"Mid-Premium","demand_index":74},
+    "Wagholi":          {"price_sqft_range":"₹6,000–₹9,500","yoy_appreciation_pct":"8–12","rental_yield_pct":"4.5–5.5","segment":"Affordable-Mid","demand_index":72},
+    "Undri_Pisoli":     {"price_sqft_range":"₹5,500–₹9,000","yoy_appreciation_pct":"8–11","rental_yield_pct":"4–5","segment":"Affordable-Mid","demand_index":68},
+    "Mahalunge":        {"price_sqft_range":"₹9,000–₹13,000","yoy_appreciation_pct":"10–14","rental_yield_pct":"4–5","segment":"Mid-Premium","demand_index":86,"note":"FASTEST APPRECIATING in Pune"},
+    "Ravet_Punawale":   {"price_sqft_range":"₹6,000–₹9,000","yoy_appreciation_pct":"9–12","rental_yield_pct":"4.5–5.5","segment":"Affordable","demand_index":70},
+    "Pimpri_Chinchwad": {"price_sqft_range":"₹6,500–₹10,000","yoy_appreciation_pct":"8–11","rental_yield_pct":"4.5–5.5","segment":"Affordable-Mid","demand_index":73},
+    "Tathawade":        {"price_sqft_range":"₹7,500–₹11,000","yoy_appreciation_pct":"8–10","rental_yield_pct":"4–5.5","segment":"Mid","demand_index":72},
+    "Bavdhan":          {"price_sqft_range":"₹8,000–₹12,000","yoy_appreciation_pct":"7–9","rental_yield_pct":"3.5–4.5","segment":"Mid","demand_index":68},
+    "NIBM_Road":        {"price_sqft_range":"₹10,000–₹15,000","yoy_appreciation_pct":"6–9","rental_yield_pct":"3–4","segment":"Premium-Luxury","demand_index":65},
+    "Kondhwa_Pisoli":   {"price_sqft_range":"₹5,000–₹9,000","yoy_appreciation_pct":"7–10","rental_yield_pct":"4–5","segment":"Affordable-Mid","demand_index":66}
+  },
+  "top_developers_2025_2026": [
+    "Godrej Properties","Kolte-Patil Developers","VTP Realty","Mahindra Lifespaces",
+    "Shapoorji Pallonji Real Estate","Birla Estates","Lodha Group","Kohinoor Group",
+    "Nyati Group","Panchshil Realty","Marvel Realtors","Rohan Builders",
+    "Hiranandani Group","Prestige Group","Adani Realty","Vilas Javdekar",
+    "Kumar Properties","Amanora","Pharande Spaces","Bramhacorp"
+  ],
+  "key_insights": {
+    "best_roi_zone": "Mahalunge (10–14% YoY, under ₹13K/sqft)",
+    "best_rental_yield": "Hinjewadi / Kharadi (4.5–6%)",
+    "best_entry_price_investment": "Ravet / Punawale (from ₹6,000/sqft, 9–12% YoY)",
+    "safest_buy": "RERA-compliant, ready-to-move in Kharadi or Hadapsar",
+    "infrastructure_catalyst": "Metro Line 3 (Hinjewadi–Shivajinagar) — inauguration imminent",
+    "long_term_bet": "Ring Road corridor (Pirangut, Wagholi, Chakan) — 25–30% cumulative gain projected"
+  }
+}

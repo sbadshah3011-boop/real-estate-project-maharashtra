@@ -1,0 +1,161 @@
+{
+  "report_metadata": {
+    "title": "Pune Real Estate Policy & Regulatory Intelligence",
+    "compiled_date": "2026-05-24",
+    "compiled_by": "AI Agent 2 — Policy Researcher",
+    "coverage_period": "2025–2026",
+    "total_topics": 12,
+    "data_sources": ["RBI","pib.gov.in","maharera.mahaonline.gov.in","igrmaharashtra.gov.in","pmc.gov.in","pmrda.gov.in","pmay-urban.gov.in","gst.gov.in","bankbazaar.com","paisabazaar.com","economictimes.com","jll.com","livemint.com","businessstandard.com"]
+  },
+  "macro_summary": {
+    "rbi_repo_rate_current": "5.25%",
+    "rbi_rate_cut_history": "50bps cut June 2025 → 5.50%, 25bps cut December 2025 → 5.25%",
+    "total_rate_cuts_2025": "75bps",
+    "market_condition": "Balanced-to-Seller in prime/metro zones; Buyer-favorable in peripheral areas",
+    "sentiment": "Moderately Bullish",
+    "stamp_duty_pune_men": "7%",
+    "stamp_duty_pune_women": "6% (1% concession)",
+    "registration_charges": "1% capped at ₹30,000",
+    "gst_affordable_under_construction": "1%",
+    "gst_non_affordable_under_construction": "5%",
+    "gst_ready_to_move": "0%",
+    "affordable_housing_threshold": "₹45L or less + ≤60sqm metro / ≤90sqm non-metro",
+    "mahrera_suspended_projects_2025": 1905,
+    "maharashtra_affordable_homes_target": "35 lakh by 2030",
+    "maharashtra_housing_investment_crore": 70000,
+    "metro_line3_progress_pct": 94,
+    "ring_road_corridor_appreciation_pct": "12–18% annually",
+    "rental_yields_mid_segment_pct": "3–4"
+  },
+  "home_loan_rates_may_2026": {
+    "SBI": "7.25%–8.95%",
+    "HDFC_Bank": "7.20%–13.20%",
+    "ICICI_Bank": "7.45%–9.80%",
+    "Axis_Bank": "8.00%–11.90%",
+    "Bank_of_Baroda": "8.10%",
+    "Kotak_Mahindra": "8.25%",
+    "note": "All floating loans linked to EBLR (Repo + Spread). CIBIL 750+ required for best rates."
+  },
+  "policy_updates": [
+    {
+      "id": 1,
+      "topic": "RBI Repo Rate",
+      "category": "Macroeconomic",
+      "key_update": "5.25% as of Dec 2025 — 75bps cumulative cuts in 2025",
+      "buyer_impact": "Lower EMIs, more buyers qualify for larger loan amounts",
+      "seller_impact": "Demand stimulation supports and gently pushes prices upward",
+      "broker_tip": "Show EMI comparison: 2023 peak (9.5%) vs today (7.25%). ₹84K/year saved on ₹60L loan",
+      "sources": ["pib.gov.in","tradingeconomics.com","bankbazaar.com"]
+    },
+    {
+      "id": 2,
+      "topic": "Maharashtra Stamp Duty",
+      "category": "Taxation",
+      "key_update": "7% men / 6% women in Pune. 3-year resale: duty only on price differential. Senior living ₹1,000 flat",
+      "buyer_impact": "Women save 1%. Investors benefit from 3-year resale rule. Senior buyers get massive stamp concession",
+      "seller_impact": "Resale rule reduces short-cycle buyer friction",
+      "broker_tip": "Always check if wife/mother can be primary registrant — saves ₹80K+ on ₹80L property",
+      "sources": ["igrmaharashtra.gov.in"]
+    },
+    {
+      "id": 3,
+      "topic": "MahaRERA 2025 Enforcement",
+      "category": "Regulatory",
+      "key_update": "1,905+ projects suspended state-wide in a major compliance sweep (with Pune leading the breakdown), mandatory QR codes, anti-double registration, Circular 50/2025",
+      "buyer_impact": "Scan QR for instant verification. Fraudulent projects being eliminated",
+      "seller_impact": "Compliant developers enjoy premium trust and pricing power",
+      "broker_tip": "Verify QR on every project ad before recommending. Visit maharera.mahaonline.gov.in",
+      "sources": ["maharera.mahaonline.gov.in","MahaRERA Circular 50/2025"]
+    },
+    {
+      "id": 4,
+      "topic": "PMAY-Urban 2.0",
+      "category": "Government Scheme",
+      "key_update": "Active for EWS/LIG/MIG (income up to ₹9L). Subsidy up to ₹2.67L. Women-headed households preferred",
+      "buyer_impact": "First-time buyers save ₹2–2.67L on home loan interest",
+      "seller_impact": "PMAY-linked affordable projects see faster absorption",
+      "broker_tip": "Ask income during first call. Under ₹9L = PMAY eligible. Apply at pmaymis.gov.in",
+      "sources": ["pmay-urban.gov.in","pib.gov.in"]
+    },
+    {
+      "id": 5,
+      "topic": "Pune Metro — Line 3 Imminent",
+      "category": "Infrastructure",
+      "key_update": "Line 3 (Hinjewadi–Shivajinagar) 94%+ complete. Phase 2 (Kharadi, Wagholi) in tender. TOD zones active",
+      "buyer_impact": "Metro proximity = 10–25% annual appreciation. Buy near Phase 2 stations early",
+      "seller_impact": "Metro-adjacent properties sell faster and command premiums",
+      "broker_tip": "Use Metro route maps in client meetings. Line 3 inauguration = Hinjewadi sales catalyst",
+      "sources": ["Pune Metro Rail Corporation","godrejproperties.com","housing.com"]
+    },
+    {
+      "id": 6,
+      "topic": "Ring Road — Price Catalyst",
+      "category": "Infrastructure",
+      "key_update": "12–18% YoY along corridor. 25–30% cumulative gain projected on completion. Key zones: Pirangut, Wagholi, Chakan, Talegaon",
+      "buyer_impact": "Entry under ₹70L available now. Long-term 25–30% appreciation play",
+      "seller_impact": "Corridor properties appreciate faster",
+      "broker_tip": "Strongest 2025–2026 investment pitch. Target investor buyers for Chakan, Wagholi, Pirangut",
+      "sources": ["amarbuilders.com","godrejproperties.com","adanirealty.com"]
+    },
+    {
+      "id": 7,
+      "topic": "Maharashtra 'Majhe Ghar, Majha Adhikar'",
+      "category": "State Policy",
+      "key_update": "35 lakh homes by 2030, ₹70,000Cr framework. Self-Redevelopment Cell ₹2,000Cr. AI-powered SHIP portal. Faster approvals, PPP model",
+      "buyer_impact": "Massive affordable supply pipeline. MHADA/CIDCO lotteries increasing",
+      "seller_impact": "Developers get faster approvals, tax relaxations, development charge concessions",
+      "broker_tip": "Track MHADA/CIDCO lottery announcements for affordable buyer pipeline",
+      "sources": ["jll.com","newindianexpress.com","credaincr.org"]
+    },
+    {
+      "id": 8,
+      "topic": "GST 2.0 — Sept 2025",
+      "category": "Taxation",
+      "key_update": "Cement GST 28%→18%. Buyer rates unchanged: 1% affordable, 5% non-affordable under-construction, 0% ready-to-move",
+      "buyer_impact": "No change in buyer GST. Developer cost reductions may moderate future price hikes",
+      "seller_impact": "Better developer margins on construction costs",
+      "broker_tip": "0% GST on ready-to-move saves ₹4L on ₹80L property vs under-construction. Lead with this for closures",
+      "sources": ["gst.gov.in","pib.gov.in","housing.com"]
+    },
+    {
+      "id": 9,
+      "topic": "PMC TDR & Development Reforms",
+      "category": "Urban Planning",
+      "key_update": "90-day TDR deadline. Documents 40→20. TOD zones: higher FSI+mixed-use within 500m of metro. UDCPR across PMRDA",
+      "buyer_impact": "Faster approvals = fewer delays. More mixed-use options near metro stations",
+      "seller_impact": "Faster TDR clearance helps developers launch projects quicker",
+      "broker_tip": "TOD zones near metro = higher FSI = more inventory in 2–3 years. Near-ready is best current value",
+      "sources": ["pmc.gov.in","pmrda.gov.in","punekarnews.in"]
+    },
+    {
+      "id": 10,
+      "topic": "SRA Reforms 2025",
+      "category": "Regulatory",
+      "key_update": "Cluster Scheme: 50+ acre slums, FSI above 4. Proposal window 120→60 days. Section 33-B liability for directors. Blockchain approvals",
+      "buyer_impact": "Free-sale units better protected. Developer accountability higher",
+      "seller_impact": "Higher FSI for large cluster projects improves developer economics",
+      "broker_tip": "Verify free-sale freeze compliance in any SRA project. New rules make SRA free-sale flats safer than pre-2025",
+      "sources": ["ghar.tv","hindustantimes.com","nobroker.in"]
+    },
+    {
+      "id": 11,
+      "topic": "Bank Home Loan Products",
+      "category": "Financing",
+      "key_update": "EBLR-linked rates auto-adjust with RBI cuts. CIBIL 750+ critical. SBI/HDFC most competitive. BOB at 8.10%",
+      "buyer_impact": "Future rate cuts auto-pass through. CIBIL management = significant savings",
+      "seller_impact": "Competitive financing keeps buyer pools large and active",
+      "broker_tip": "Help clients get pre-approval before site visits. Filters serious buyers, accelerates closures",
+      "sources": ["paisabazaar.com","economictimes.com","cleartax.in"]
+    },
+    {
+      "id": 12,
+      "topic": "Pune Market Conditions May 2026",
+      "category": "Market Analysis",
+      "key_update": "Balanced-to-seller in prime zones. 5–12% broad appreciation, up to 25% in infrastructure corridors. ₹78L avg ticket size. 19% transactions above ₹1Cr",
+      "buyer_impact": "Buyer-favorable in periphery (negotiate). Seller market in Hinjewadi, Kharadi, KP, KN",
+      "seller_impact": "Price correction unlikely. Quality and RERA compliance are differentiators",
+      "broker_tip": "Match budget to micro-market precisely. Ready-to-move closes 40% faster. Emphasize developer track record",
+      "sources": ["magicbricks.com","housing.com","economictimes.com","jll.com"]
+    }
+  ]
+}

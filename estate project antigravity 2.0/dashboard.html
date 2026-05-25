@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maharashtra Estate — Insights Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg:        #0b0f1c;
+      --sidebar:   #0e1220;
+      --card:      #131828;
+      --card2:     #161c2e;
+      --border:    rgba(255,255,255,0.07);
+      --border2:   rgba(255,255,255,0.12);
+      --accent:    #3b82f6;
+      --accent2:   #60a5fa;
+      --teal:      #14b8a6;
+      --green:     #22c55e;
+      --rose:      #f43f5e;
+      --gold:      #f59e0b;
+      --purple:    #8b5cf6;
+      --text:      #e8eaf6;
+      --text2:     rgba(232,234,246,0.55);
+      --text3:     rgba(232,234,246,0.3);
+      --active-bg: rgba(59,130,246,0.15);
+      --active-border: rgba(59,130,246,0.5);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden}
+    body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);display:flex;font-size:14px}
+
+    /* ── SIDEBAR ── */
+    .sidebar{
+      width:200px;min-width:200px;height:100vh;
+      background:var(--sidebar);
+      border-right:1px solid var(--border);
+      display:flex;flex-direction:column;
+      padding:0;overflow:hidden;
+    }
+    .sidebar-brand{
+      padding:20px 18px 16px;
+      border-bottom:1px solid var(--border);
+    }
+    .brand-logo{
+      width:36px;height:36px;border-radius:9px;
+      background:linear-gradient(135deg,#3b82f6,#8b5cf6);
+      display:flex;align-items:center;justify-content:center;
+      font-size:18px;margin-bottom:10px;
+      box-shadow:0 0 16px rgba(59,130,246,0.4);
+    }
+    .brand-name{font-size:13px;font-weight:700;color:var(--text);letter-spacing:0.2px}
+    .brand-sub{font-size:9px;font-weight:600;color:var(--accent2);text-transform:uppercase;letter-spacing:1.5px;margin-top:2px}
+
+    .sidebar-nav{flex:1;padding:12px 0;overflow-y:auto}
+    .nav-item{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 18px;
+      cursor:pointer;border-radius:0;
+      font-size:12.5px;font-weight:500;color:var(--text2);
+      transition:all 0.18s ease;
+      border-left:2px solid transparent;
+      position:relative;
+    }
+    .nav-item:hover{color:var(--text);background:rgba(255,255,255,0.04)}
+    .nav-item.active{
+      color:var(--accent2);
+      background:var(--active-bg);
+      border-left:2px solid var(--accent);
+    }
+    .nav-item .nav-icon{font-size:14px;flex-shrink:0;width:18px;text-align:center}
+    .nav-item .nav-label{line-height:1.3}
+
+    .sidebar-footer{
+      padding:14px 18px;
+      border-top:1px solid var(--border);
+      font-size:10.5px;color:var(--text3);
+    }
+    .status-row{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+    .status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+    .status-label{font-size:10.5px;color:var(--green);font-weight:600}
+    .context-time{font-size:10px;color:var(--text3)}
+    .live-banner{background:rgba(20,184,166,0.1);border:1px solid rgba(20,184,166,0.25);border-radius:8px;padding:8px 12px;margin:10px 18px 0;font-size:10px;color:#2dd4bf;line-height:1.5}
+    .refresh-btn{display:flex;align-items:center;justify-content:center;gap:6px;margin:8px 18px 0;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);border-radius:7px;padding:8px 10px;font-size:11px;font-weight:600;color:var(--accent2);cursor:pointer;transition:all 0.2s}
+    .refresh-btn:hover{background:rgba(59,130,246,0.22);border-color:rgba(59,130,246,0.5)}
+    .refresh-btn.spinning .r-icon{display:inline-block;animation:spin 1s linear infinite}
+    @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+    /* ── MAIN AREA ── */
+    .main{flex:1;height:100vh;overflow-y:auto;background:var(--bg);padding:0}
+
+    /* ── PAGE ── */
+    .page{display:none;padding:28px 32px;min-height:100vh}
+    .page.active{display:block}
+
+    /* ── PAGE HEADER ── */
+    .page-header{margin-bottom:24px}
+    .page-title{font-size:18px;font-weight:700;display:flex;align-items:center;gap:10px;margin-bottom:4px}
+    .page-title .icon{font-size:16px}
+    .page-subtitle{font-size:12px;color:var(--text2)}
+
+    /* ── SECTION HEADER ── */
+    .section-head{
+      display:flex;align-items:center;justify-content:space-between;
+      margin-bottom:16px;flex-wrap:wrap;gap:10px;
+    }
+    .section-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+    .section-title .ico{font-size:14px}
+    .section-hint{font-size:11px;color:var(--text3)}
+
+    /* ── SEARCH + FILTER BAR ── */
+    .toolbar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+    .search-wrap{position:relative;flex:1;min-width:200px;max-width:520px}
+    .search-wrap input{
+      width:100%;background:var(--card);border:1px solid var(--border2);
+      border-radius:8px;padding:8px 12px 8px 34px;
+      color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;
+      transition:border-color 0.2s;
+    }
+    .search-wrap input:focus{border-color:var(--accent)}
+    .search-wrap input::placeholder{color:var(--text3)}
+    .search-wrap .s-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;color:var(--text3)}
+    .filter-select{
+      background:var(--card);border:1px solid var(--border2);border-radius:8px;
+      padding:8px 12px;color:var(--text2);font-size:12px;font-family:'Inter',sans-serif;
+      outline:none;cursor:pointer;min-width:130px;
+    }
+    .filter-select option{background:var(--card2)}
+
+    /* ── TABLE ── */
+    .table-wrap{background:var(--card);border-radius:12px;border:1px solid var(--border);overflow:hidden;margin-bottom:32px}
+    table{width:100%;border-collapse:collapse}
+    thead th{
+      padding:11px 16px;text-align:left;
+      font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.9px;
+      color:var(--text3);background:rgba(255,255,255,0.02);
+      border-bottom:1px solid var(--border);cursor:pointer;white-space:nowrap;
+      user-select:none;transition:color 0.15s;
+    }
+    thead th:hover{color:var(--text2)}
+    thead th .sort-arrow{margin-left:4px;opacity:0.5;font-size:9px}
+    thead th.sorted{color:var(--accent2)}
+    thead th.sorted .sort-arrow{opacity:1}
+    tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s}
+    tbody tr:last-child{border-bottom:none}
+    tbody tr:hover{background:rgba(255,255,255,0.03)}
+    tbody td{padding:13px 16px;font-size:12.5px;color:var(--text);vertical-align:middle}
+    .td-locality{font-weight:600;font-size:13px}
+    .td-profile{font-size:11.5px;color:var(--text2)}
+    .td-rate{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text)}
+    .td-appr{font-weight:700;font-size:13px}
+    .appr-high{color:#22c55e}.appr-med{color:#84cc16}.appr-low{color:#f59e0b}
+    .td-drivers{font-size:11.5px;color:var(--text2);max-width:220px}
+
+    /* ── PROJECT CARDS ── */
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:28px}
+    .proj-card{
+      background:var(--card);border:1px solid var(--border);border-radius:12px;
+      padding:18px;position:relative;overflow:hidden;
+      transition:border-color 0.2s,transform 0.2s;cursor:default;
+    }
+    .proj-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+    .proj-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+    .proj-card.premium::before{background:linear-gradient(90deg,var(--accent),var(--teal))}
+    .proj-card.luxury::before{background:linear-gradient(90deg,var(--gold),var(--rose))}
+    .proj-card.affordable::before{background:linear-gradient(90deg,var(--green),var(--teal))}
+    .proj-card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+    .proj-name{font-size:14px;font-weight:700;margin-bottom:2px}
+    .proj-dev{font-size:11px;color:var(--text2)}
+    .proj-badge{
+      font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;
+      padding:3px 8px;border-radius:4px;white-space:nowrap;margin-top:2px;
+    }
+    .badge-premium{background:rgba(59,130,246,0.15);color:var(--accent2);border:1px solid rgba(59,130,246,0.3)}
+    .badge-luxury{background:rgba(245,158,11,0.15);color:var(--gold);border:1px solid rgba(245,158,11,0.3)}
+    .badge-affordable{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3)}
+    .badge-commercial{background:rgba(139,92,246,0.15);color:var(--purple);border:1px solid rgba(139,92,246,0.3)}
+    .proj-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px}
+    .proj-meta-item{}
+    .proj-meta-label{font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:2px}
+    .proj-meta-val{font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--text)}
+    .proj-location{display:flex;align-items:center;gap:5px;margin-top:10px;font-size:11.5px;color:var(--text2)}
+    .proj-rera{margin-top:8px;display:flex;align-items:center;gap:5px;font-size:10.5px}
+    .rera-ok{color:var(--green)}.rera-pend{color:var(--gold)}
+
+    /* ── KPI CARDS ── */
+    .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+    .kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.2s}
+    .kpi:hover{border-color:var(--border2);transform:translateY(-2px)}
+    .kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+    .kpi.blue::before{background:linear-gradient(90deg,#3b82f6,#60a5fa)}
+    .kpi.teal::before{background:linear-gradient(90deg,#14b8a6,#2dd4bf)}
+    .kpi.gold::before{background:linear-gradient(90deg,#f59e0b,#fbbf24)}
+    .kpi.green::before{background:linear-gradient(90deg,#22c55e,#4ade80)}
+    .kpi.purple::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa)}
+    .kpi.rose::before{background:linear-gradient(90deg,#f43f5e,#fb7185)}
+    .kpi-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text3);margin-bottom:8px}
+    .kpi-val{font-size:22px;font-weight:800;line-height:1;margin-bottom:5px}
+    .kpi.blue  .kpi-val{color:#60a5fa}
+    .kpi.teal  .kpi-val{color:#2dd4bf}
+    .kpi.gold  .kpi-val{color:#fbbf24}
+    .kpi.green .kpi-val{color:#4ade80}
+    .kpi.purple.kpi-val{color:#a78bfa}
+    .kpi.rose  .kpi-val{color:#fb7185}
+    .kpi-sub{font-size:11px;color:var(--text3)}
+    .kpi-badge{position:absolute;top:14px;right:14px;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px}
+    .badge-up{background:rgba(34,197,94,0.12);color:var(--green)}.badge-down{background:rgba(244,63,94,0.12);color:var(--rose)}.badge-flat{background:rgba(245,158,11,0.12);color:var(--gold)}
+
+    /* ── BRIEFING ── */
+    .brief-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px}
+    .brief-heading{font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--text)}
+    .brief-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+    .brief-item{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--text2);line-height:1.6}
+    .brief-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:5px}
+    .dot-teal{background:var(--teal)}.dot-blue{background:var(--accent)}.dot-gold{background:var(--gold)}.dot-green{background:var(--green)}.dot-rose{background:var(--rose)}.dot-purple{background:var(--purple)}
+
+    /* ── SENTIMENT ── */
+    .plan-tab.active{flex:1;text-align:center;padding:12px;background:rgba(59,130,246,0.1);border:1px solid #3b82f6;border-radius:6px;cursor:pointer}
+    .sentiment-row{display:flex;align-items:center;gap:20px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:24px;flex-wrap:wrap}
+    .s-score-wrap{text-align:center;min-width:90px}
+    .s-score{font-size:40px;font-weight:900;background:linear-gradient(135deg,#f59e0b,#f43f5e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
+    .s-score-label{font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+    .s-bar-wrap{flex:1;min-width:180px}
+    .s-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-bottom:6px}
+    .s-bar-bg{height:8px;border-radius:4px;background:rgba(255,255,255,0.07);overflow:hidden}
+    .s-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#f43f5e,#f59e0b,#22c55e);transition:width 1.5s ease}
+    .s-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+    .s-tag{font-size:10px;padding:3px 9px;border-radius:10px;font-weight:500;background:var(--card2);border:1px solid var(--border)}
+    .s-desc{max-width:300px}
+    .s-desc h3{font-size:13px;font-weight:700;margin-bottom:6px}
+    .s-desc p{font-size:11.5px;color:var(--text2);line-height:1.65}
+
+    /* ── POLICY ── */
+    .policy-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:28px}
+    .policy-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.2s}
+    .policy-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+    .policy-accent{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:12px 0 0 12px}
+    .policy-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+    .policy-title{font-size:12.5px;font-weight:700;line-height:1.4;padding-left:10px}
+    .policy-date{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+    .policy-body{font-size:11.5px;color:var(--text2);line-height:1.65;margin-bottom:10px;padding-left:10px}
+    .policy-tip{font-size:11px;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid var(--border);margin-left:10px}
+    .policy-tip strong{color:var(--gold)}
+
+    /* ── CHECKOUT MODAL ── */
+    .modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(5px); }
+    .modal { background:#0f172a; width:450px; max-width:90%; border-radius:16px; border:1px solid #1e293b; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 25px 50px -12px rgba(0,0,0,0.5); font-family:'Inter',sans-serif; }
+    .modal-header { background:linear-gradient(135deg,#1e293b,#0f172a); padding:20px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1e293b; }
+    .modal-title { font-size:16px; font-weight:700; color:#f8fafc; }
+    .modal-close { cursor:pointer; font-size:20px; color:#94a3b8; line-height:1; }
+    .modal-body { padding:24px; }
+    
+    .plan-summary { background:#1e293b; padding:16px; border-radius:8px; margin-bottom:20px; border:1px solid #334155; display:flex; justify-content:space-between; align-items:center;}
+    .plan-name { font-size:14px; font-weight:600; color:#e2e8f0; margin-bottom:4px;}
+    .plan-desc { font-size:12px; color:#94a3b8; }
+    .plan-price { font-size:18px; font-weight:800; color:#22c55e; }
+    
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block; font-size:12px; font-weight:600; color:#cbd5e1; margin-bottom:6px; }
+    .form-group input { width:100%; box-sizing:border-box; background:#1e293b; border:1px solid #334155; color:#f8fafc; padding:10px 14px; border-radius:6px; font-size:14px; outline:none; transition:border 0.2s;}
+    .form-group input:focus { border-color:#3b82f6; }
+    
+    .pay-tabs { display:flex; gap:8px; margin-bottom:16px; border-bottom:1px solid #1e293b; padding-bottom:12px;}
+    .pay-tab { padding:8px 12px; background:transparent; border:1px solid #334155; border-radius:6px; color:#94a3b8; font-size:12px; cursor:pointer; font-weight:600;}
+    .pay-tab.active { background:rgba(59,130,246,0.1); border-color:#3b82f6; color:#3b82f6;}
+    
+    .pay-content { display:none; }
+    .pay-content.active { display:block; }
+    .qr-box { text-align:center; padding:20px; background:#1e293b; border-radius:8px; border:1px dashed #334155;}
+    
+    .btn-pay { width:100%; padding:14px; background:#3b82f6; color:#fff; font-size:14px; font-weight:700; border:none; border-radius:8px; cursor:pointer; margin-top:10px; transition:all 0.2s; }
+    .btn-pay:hover { background:#2563eb; }
+    .btn-pay.loading { background:#475569; pointer-events:none; }
+
+    /* ── SAAS CTA ── */
+    .saas-cta{background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(20,184,166,0.05));border:1px solid var(--border);border-radius:12px;padding:16px;margin:20px 24px}
+    .saas-cta-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+    .saas-cta-desc{font-size:10.5px;color:var(--text3);line-height:1.5;margin-bottom:12px}
+    .saas-cta-btn{display:block;width:100%;border:none;border-radius:6px;padding:10px;font-size:11.5px;font-weight:700;cursor:pointer;transition:all 0.2s;text-align:center}
+    .email-btn{background:var(--accent);color:#fff}
+    .email-btn:hover{background:#2563eb;transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,0.3)}
+    .wa-btn{background:#22c55e;color:#fff}
+    .wa-btn:hover{background:#16a34a;transform:translateY(-1px);box-shadow:0 4px 12px rgba(34,197,94,0.3)}
+
+    /* ── RATE TABLE ── */
+    .rate-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:28px}
+    .rate-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;text-align:center;transition:border-color 0.2s}
+    .rate-card:hover{border-color:var(--border2)}
+    .rate-bank{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:7px;font-weight:600}
+    .rate-val{font-size:20px;font-weight:800;color:var(--teal);font-family:'JetBrains Mono',monospace}
+    .rate-unit{font-size:10px;color:var(--text3);margin-top:3px}
+
+    /* ── TRANSIT ── */
+    .transit-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden;transition:border-color 0.2s}
+    .transit-card:hover{border-color:var(--border2)}
+    .transit-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+    .transit-title{font-size:13.5px;font-weight:700}
+    .transit-subtitle{font-size:11px;color:var(--text2);margin-top:2px}
+    .progress-wrap{margin-bottom:10px}
+    .progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:6px}
+    .progress-bg{height:6px;border-radius:3px;background:rgba(255,255,255,0.08);overflow:hidden}
+    .progress-fill{height:100%;border-radius:3px;transition:width 1.5s ease}
+    .transit-zones{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .zone-tag{font-size:10.5px;padding:3px 10px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text2)}
+    .transit-impact{margin-top:12px;font-size:11.5px;background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.15);border-radius:8px;padding:8px 12px;color:var(--text2)}
+    .transit-impact strong{color:var(--accent2)}
+    .milestone-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+    .milestone-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+    .m-status{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
+    .m-done{color:var(--green)}.m-progress{color:var(--accent2)}.m-planned{color:var(--text3)}
+    .m-label{font-size:12.5px;font-weight:600;margin-bottom:3px}
+    .m-sub{font-size:11px;color:var(--text2)}
+
+    /* ── SCROLLBAR ── */
+    .main::-webkit-scrollbar{width:5px}
+    .main::-webkit-scrollbar-track{background:transparent}
+    .main::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:3px}
+
+    /* ── TAG BADGES ── */
+    .tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px}
+    .tag-blue{background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.25)}
+    .tag-teal{background:rgba(20,184,166,0.15);color:#2dd4bf;border:1px solid rgba(20,184,166,0.25)}
+    .tag-gold{background:rgba(245,158,11,0.15);color:#fbbf24;border:1px solid rgba(245,158,11,0.25)}
+    .tag-green{background:rgba(34,197,94,0.15);color:#4ade80;border:1px solid rgba(34,197,94,0.25)}
+    .tag-rose{background:rgba(244,63,94,0.15);color:#fb7185;border:1px solid rgba(244,63,94,0.25)}
+    .tag-purple{background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.25)}
+
+    /* ── DIVIDER ── */
+    .divider{height:1px;background:var(--border);margin:24px 0}
+  </style>
+</head>
+<body>
+
+<!-- ══ CHECKOUT MODAL ══ -->
+<div class="modal-overlay" id="checkout-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Secure Checkout</div>
+      <div class="modal-close" onclick="closeCheckout()">×</div>
+    </div>
+    <div class="modal-body">
+      <div class="plan-summary" style="display:flex; flex-direction:column; gap:14px; align-items:stretch;">
+        <div>
+          <div class="plan-name" style="font-size:16px;">Maharashtra Realty Brief</div>
+          <div class="plan-desc">Select your intelligence plan</div>
+        </div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          
+          <div class="plan-tab" style="text-align:center; padding:10px; border:1px solid #334155; border-radius:6px; cursor:pointer;" onclick="selectPlan(0, this)">
+             <div style="font-size:16px; font-weight:800; color:#f8fafc;">₹0</div>
+             <div style="font-size:10px; color:#94a3b8; margin-top:2px;">Free Trial (3-Days)</div>
+             <div style="font-size:9px; color:#64748b; margin-top:2px;">Limited Cities</div>
+          </div>
+          
+          <div class="plan-tab active" style="text-align:center; padding:10px; background:rgba(59,130,246,0.1); border:1px solid #3b82f6; border-radius:6px; cursor:pointer;" onclick="selectPlan(499, this)">
+             <div style="font-size:16px; font-weight:800; color:#f8fafc;">₹499<span style="font-size:10px">/mo</span></div>
+             <div style="font-size:10px; color:#94a3b8; margin-top:2px;">Pro Plan</div>
+             <div style="font-size:9px; color:#64748b; margin-top:2px;">Individual Brokers</div>
+          </div>
+
+          <div class="plan-tab" style="text-align:center; padding:10px; border:1px solid #334155; border-radius:6px; cursor:pointer;" onclick="selectPlan(1999, this)">
+             <div style="font-size:16px; font-weight:800; color:#f8fafc;">₹1,999<span style="font-size:10px">/mo</span></div>
+             <div style="font-size:10px; color:#94a3b8; margin-top:2px;">Team Plan</div>
+             <div style="font-size:9px; color:#64748b; margin-top:2px;">Small Agencies (3-5)</div>
+          </div>
+
+          <div class="plan-tab" style="text-align:center; padding:10px; border:1px solid #334155; border-radius:6px; cursor:pointer; position:relative;" onclick="selectPlan(4999, this)">
+             <div style="position:absolute; top:-8px; right:-5px; background:#fbbf24; color:#000; font-size:8px; font-weight:800; padding:2px 5px; border-radius:10px;">SAVE 17%</div>
+             <div style="font-size:16px; font-weight:800; color:#f8fafc;">₹4,999<span style="font-size:10px">/yr</span></div>
+             <div style="font-size:10px; color:#94a3b8; margin-top:2px;">Annual Pro</div>
+             <div style="font-size:9px; color:#64748b; margin-top:2px;">Serious Investors</div>
+          </div>
+          
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="sub-name" placeholder="Rahul Desai" required>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="sub-email" placeholder="rahul@example.com" required>
+      </div>
+      
+      <div class="form-group" style="margin-top:24px;">
+        <label>Payment Method</label>
+        <div class="pay-tabs">
+          <div class="pay-tab active" onclick="switchPayTab('upi', this)">UPI / QR</div>
+          <div class="pay-tab" onclick="switchPayTab('card', this)">Card</div>
+          <div class="pay-tab" onclick="switchPayTab('net', this)">Net Banking</div>
+        </div>
+        
+        <div id="pay-upi" class="pay-content active">
+          <div class="qr-box">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=upi://pay?pa=test@razorpay&pn=MahaEstate" alt="QR" style="background:#fff;padding:5px;border-radius:4px;margin-bottom:10px;">
+            <div style="font-size:11px;color:#94a3b8;">Scan with GPay, PhonePe, Paytm</div>
+          </div>
+        </div>
+        <div id="pay-card" class="pay-content">
+          <input type="text" placeholder="Card Number" style="width:100%;padding:10px;background:#1e293b;border:1px solid #334155;color:#fff;border-radius:6px;margin-bottom:8px;box-sizing:border-box;">
+          <div style="display:flex;gap:8px;">
+            <input type="text" placeholder="MM/YY" style="width:50%;padding:10px;background:#1e293b;border:1px solid #334155;color:#fff;border-radius:6px;box-sizing:border-box;">
+            <input type="text" placeholder="CVV" style="width:50%;padding:10px;background:#1e293b;border:1px solid #334155;color:#fff;border-radius:6px;box-sizing:border-box;">
+          </div>
+        </div>
+        <div id="pay-net" class="pay-content">
+           <select style="width:100%;padding:10px;background:#1e293b;border:1px solid #334155;color:#fff;border-radius:6px;outline:none;">
+             <option>HDFC Bank</option>
+             <option>State Bank of India</option>
+             <option>ICICI Bank</option>
+             <option>Axis Bank</option>
+           </select>
+        </div>
+      </div>
+      
+      <button class="btn-pay" id="btn-pay" onclick="processPayment()">Pay ₹99 & Subscribe</button>
+      <div style="text-align:center;margin-top:12px;font-size:10px;color:#64748b;display:flex;align-items:center;justify-content:center;gap:4px;">
+        <span>🔒</span> Secured by Razorpay Simulation
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">🏙️</div>
+    <div class="brand-name">Maharashtra Estate</div>
+    <div class="brand-sub">Insights Dashboard</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item" onclick="showPage('briefing',this)" id="nav-briefing">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">2-Min Briefing</span>
+    </div>
+    <div class="nav-item active" onclick="showPage('launches',this)" id="nav-launches">
+      <span class="nav-icon">🏗️</span>
+      <span class="nav-label">Launches &amp; Pricing</span>
+    </div>
+    <div class="nav-item" onclick="showPage('policy',this)" id="nav-policy">
+      <span class="nav-icon">📜</span>
+      <span class="nav-label">Policy &amp; Finance</span>
+    </div>
+    <div class="nav-item" onclick="showPage('transit',this)" id="nav-transit">
+      <span class="nav-icon">🚇</span>
+      <span class="nav-label">Transit Milestones</span>
+    </div>
+  </nav>
+
+  <!-- SAAS CTA -->
+  <div class="saas-cta">
+    <div class="saas-cta-title"><span>📧</span> Daily Intelligence</div>
+    <div class="saas-cta-desc">Get the 6:00 AM Maharashtra Realty Brief directly in your inbox.</div>
+    <button class="saas-cta-btn email-btn" onclick="openCheckout()">Subscribe Now</button>
+    
+    <div class="saas-cta-desc" style="margin-top:14px; border-top:1px solid rgba(255,255,255,0.05); padding-top:14px;">Need property advice? Talk to the expert who built this AI.</div>
+    <a href="https://wa.me/919876543210?text=Hi!%20I%20saw%20your%20Maharashtra%20Real%20Estate%20AI%20dashboard%20and%20want%20some%20advice." target="_blank" style="text-decoration:none;">
+      <button class="saas-cta-btn wa-btn">💬 Consult via WhatsApp</button>
+    </a>
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="status-row">
+      <div class="status-dot"></div>
+      <span class="status-label">Status: LIVE</span>
+    </div>
+    <div class="context-time" id="last-updated-label">Last Updated: Loading...</div>
+    <div class="context-time" style="margin-top:2px;font-size:9.5px" id="data-source-label">Source: Checking...</div>
+  </div>
+  <div class="live-banner" id="live-banner">📡 Connecting to live server...</div>
+  <div class="refresh-btn" id="refresh-btn" onclick="triggerRefresh()">
+    <span class="r-icon">🔄</span> Refresh &amp; Send Email
+  </div>
+</aside>
+
+<!-- ══ MAIN CONTENT ══ -->
+<main class="main">
+
+  <!-- ══ PAGE 1: 2-MIN BRIEFING ══ -->
+  <section class="page" id="page-briefing">
+    <div class="page-header">
+      <div class="page-title"><span class="icon">🏠</span> 2-Minute Briefing</div>
+      <div class="page-subtitle">AI-synthesized executive summary — 24 May 2026 · Maharashtra Real Estate</div>
+    </div>
+
+    <!-- SENTIMENT METER -->
+    <div class="sentiment-row">
+      <div class="s-score-wrap">
+        <div class="s-score">7.8</div>
+        <div class="s-score-label">Sentiment / 10</div>
+      </div>
+      <div class="s-bar-wrap">
+        <div class="s-bar-labels"><span>Bearish</span><span>Neutral</span><span>Bullish</span></div>
+        <div class="s-bar-bg"><div class="s-bar-fill" style="width:78%"></div></div>
+        <div class="s-tags">
+          <span class="s-tag" style="color:var(--teal);border-color:rgba(20,184,166,.25)">✅ Repo 5.25%</span>
+          <span class="s-tag" style="color:var(--accent2);border-color:rgba(59,130,246,.25)">📈 81K Units Sold</span>
+          <span class="s-tag" style="color:var(--gold);border-color:rgba(245,158,11,.25)">🏗️ 41 Projects Live</span>
+          <span class="s-tag" style="color:var(--green);border-color:rgba(34,197,94,.25)">🚇 Metro Line 3</span>
+          <span class="s-tag" style="color:var(--rose);border-color:rgba(244,63,94,.25)">⚠️ 1905 RERA Suspended</span>
+        </div>
+      </div>
+      <div class="s-desc">
+        <h3>Moderately Bullish</h3>
+        <p>Pune's market runs hot in 2026. RBI's 75bps cuts drove home loans to 7.20%. 2025 saw 81K units sold vs 64K launched. National brands (Birla, Adani, Prestige, Lodha) all entered Pune — a strong institutional signal.</p>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi blue"><span class="kpi-badge badge-up">▲ 8.2%</span><div class="kpi-label">Q1 2026 Launches</div><div class="kpi-val" style="color:#60a5fa">11,371</div><div class="kpi-sub">Units launched Jan–Mar 2026</div></div>
+      <div class="kpi teal"><span class="kpi-badge badge-up">▲ 16%</span><div class="kpi-label">2025 Registrations</div><div class="kpi-val" style="color:#2dd4bf">99,300+</div><div class="kpi-sub">Jan–May 2025 YoY</div></div>
+      <div class="kpi gold"><span class="kpi-badge badge-down">▼ 75bps</span><div class="kpi-label">RBI Repo Rate</div><div class="kpi-val" style="color:#fbbf24">5.25%</div><div class="kpi-sub">Dec 2025 — multi-year low</div></div>
+      <div class="kpi green"><span class="kpi-badge badge-up">▲ Premium</span><div class="kpi-label">Avg Ticket Size</div><div class="kpi-val" style="color:#4ade80">₹78L</div><div class="kpi-sub">Avg asking ₹12,961/sqft</div></div>
+      <div class="kpi purple"><span class="kpi-badge badge-up">Active</span><div class="kpi-label">RERA Suspended</div><div class="kpi-val" style="color:#a78bfa">1,905+</div><div class="kpi-sub">Projects pulled in 2025</div></div>
+      <div class="kpi rose"><span class="kpi-badge badge-flat">Stable</span><div class="kpi-label">Stamp Duty Pune</div><div class="kpi-val" style="color:#fb7185">7% / 6%</div><div class="kpi-sub">Men / Women (1% concession)</div></div>
+    </div>
+
+    <!-- KEY BULLETS -->
+    <div class="brief-card">
+      <div class="brief-heading">📌 5 Things Every Pune Broker Must Know Today</div>
+      <ul class="brief-list">
+        <li class="brief-item"><div class="brief-dot dot-teal"></div><span><strong style="color:var(--text)">Demand-Supply Gap Driving Prices:</strong> 2025 saw 81,000 units sold against only 64,000 launched — a 17,000-unit absorption surplus that is actively pushing prices upward across all zones.</span></li>
+        <li class="brief-item"><div class="brief-dot dot-blue"></div><span><strong style="color:var(--text)">EMIs at 4-Year Low — Push Fence-Sitters NOW:</strong> RBI repo at 5.25%. HDFC from 7.20%, SBI from 7.25%. EMI on ₹60L (20yr) dropped from ~₹53K (2023) to ~₹46K today — ₹84,000 saved per year.</span></li>
+        <li class="brief-item"><div class="brief-dot dot-gold"></div><span><strong style="color:var(--text)">Mahalunge Is the Fastest Appreciating Zone:</strong> 10–14% YoY — higher than Baner, Kharadi, or Hinjewadi. Still priced at ₹9,000–13,000/sqft vs Baner at ₹16,000+. Early entry window open now.</span></li>
+        <li class="brief-item"><div class="brief-dot dot-green"></div><span><strong style="color:var(--text)">Metro Line 3 (94% Done) — Imminent Inauguration:</strong> Hinjewadi–Shivajinagar corridor near opening. Every metro corridor in India surged 15–20% post-inauguration. Buy near stations before it opens.</span></li>
+        <li class="brief-item"><div class="brief-dot dot-rose"></div><span><strong style="color:var(--text)">Only Recommend RERA-Compliant Projects:</strong> MahaRERA suspended 1,905+ projects state-wide in a major compliance sweep (with Pune leading the breakdown). QR codes are now mandatory on all ads. Scan before every client meeting at maharera.mahaonline.gov.in.</span></li>
+      </ul>
+    </div>
+
+    <div class="brief-card">
+      <div class="brief-heading">🎯 Today's Top Investment Picks</div>
+      <ul class="brief-list">
+        <li class="brief-item"><div class="brief-dot dot-teal"></div><span><strong style="color:var(--text)">Best ROI Zone:</strong> Mahalunge (10–14% YoY, VTP Earth 1, Godrej River Royale)</span></li>
+        <li class="brief-item"><div class="brief-dot dot-blue"></div><span><strong style="color:var(--text)">Best Rental Yield:</strong> Kharadi / Hinjewadi (4.5–6% yield, strong IT demand)</span></li>
+        <li class="brief-item"><div class="brief-dot dot-gold"></div><span><strong style="color:var(--text)">Best Entry Price:</strong> Ravet / Punawale (from ₹6,000/sqft, 9–12% appreciation)</span></li>
+        <li class="brief-item"><div class="brief-dot dot-green"></div><span><strong style="color:var(--text)">Safest Buy:</strong> RERA-compliant, ready-to-move in Kharadi or Hadapsar (0% GST)</span></li>
+        <li class="brief-item"><div class="brief-dot dot-purple"></div><span><strong style="color:var(--text)">Long-Term Bet:</strong> Ring Road corridor — Pirangut, Wagholi, Chakan (25–30% cumulative gain projected)</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══ PAGE 2: LAUNCHES & PRICING ══ -->
+  <section class="page active" id="page-launches">
+    <div class="page-header">
+      <div class="page-title"><span class="icon">📊</span> Micro-Market Pricing &amp; Dynamics</div>
+    </div>
+
+    <!-- SEARCH + FILTER -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="s-icon">🔍</span>
+        <input type="text" id="market-search" placeholder="Search micro-markets (e.g., Bandra, Hinjewadi, Wardha)..." oninput="filterMarkets()"/>
+      </div>
+      <select class="filter-select" id="city-filter" onchange="filterMarkets()">
+        <option value="all">City: All Maharashtra</option>
+        <option value="mumbai">Mumbai</option>
+        <option value="pune">Pune</option>
+        <option value="nagpur">Nagpur</option>
+        <option value="nashik">Nashik</option>
+        <option value="thane">Thane</option>
+        <option value="navi mumbai">Navi Mumbai</option>
+        <option value="aurangabad">Aurangabad</option>
+        <option value="kolhapur">Kolhapur</option>
+      </select>
+      <select class="filter-select" id="appr-filter" onchange="filterMarkets()">
+        <option value="all">Appreciation: All</option>
+        <option value="high">High (10%+)</option>
+        <option value="med">Medium (7–10%)</option>
+        <option value="low">Low (&lt;7%)</option>
+      </select>
+    </div>
+
+    <div class="section-head">
+      <span class="section-hint">Click on headers to sort the table</span>
+    </div>
+
+    <div class="table-wrap">
+      <table id="market-table">
+        <thead>
+          <tr>
+            <th onclick="sortTable(-1)">CITY <span class="sort-arrow"> </span></th>
+            <th onclick="sortTable(0)" class="sorted">LOCALITY <span class="sort-arrow">▼</span></th>
+            <th onclick="sortTable(1)">DEMAND PROFILE <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable(2)">STANDARD RATE (₹/SQFT) <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable(3)">LUXURY RATE (₹/SQFT) <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable(4)">APPRECIATION YOY <span class="sort-arrow">↕</span></th>
+            <th>PRIMARY DRIVERS</th>
+          </tr>
+        </thead>
+        <tbody id="market-tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- MAJOR PROJECT LAUNCHES -->
+    <div class="section-head">
+      <div class="section-title"><span class="ico">🏗️</span> Major Project Launches (2025/2026)</div>
+      <div class="toolbar" style="margin:0">
+        <div class="search-wrap" style="max-width:260px">
+          <span class="s-icon">🔍</span>
+          <input type="text" id="proj-search" placeholder="Search projects..." oninput="filterProjects()"/>
+        </div>
+        <select class="filter-select" id="proj-filter" onchange="filterProjects()">
+          <option value="all">All Zones</option>
+          <option value="hinjewadi">Hinjewadi</option>
+          <option value="baner">Baner/Wakad</option>
+          <option value="kharadi">Kharadi</option>
+          <option value="east">East Pune</option>
+          <option value="south">South Pune</option>
+          <option value="luxury">Luxury</option>
+        </select>
+      </div>
+    </div>
+    <div class="cards-grid" id="projects-grid"></div>
+  </section>
+
+  <!-- ══ PAGE 3: POLICY & FINANCE ══ -->
+  <section class="page" id="page-policy">
+    <div class="page-header">
+      <div class="page-title"><span class="icon">📜</span> Policy &amp; Finance</div>
+      <div class="page-subtitle">12 regulatory &amp; macro updates — AI Agent 2 Research · May 2026</div>
+    </div>
+
+    <!-- HOME LOAN RATES -->
+    <div class="section-title" style="margin-bottom:12px"><span class="ico">🏦</span> Home Loan Rates — May 2026</div>
+    <div class="rate-grid" style="margin-bottom:24px">
+      <div class="rate-card"><div class="rate-bank">HDFC Bank</div><div class="rate-val">7.20%</div><div class="rate-unit">p.a. onwards</div></div>
+      <div class="rate-card"><div class="rate-bank">SBI</div><div class="rate-val">7.25%</div><div class="rate-unit">p.a. onwards</div></div>
+      <div class="rate-card"><div class="rate-bank">ICICI Bank</div><div class="rate-val">7.45%</div><div class="rate-unit">p.a. onwards</div></div>
+      <div class="rate-card"><div class="rate-bank">Axis Bank</div><div class="rate-val">8.00%</div><div class="rate-unit">p.a. onwards</div></div>
+      <div class="rate-card"><div class="rate-bank">Bank of Baroda</div><div class="rate-val">8.10%</div><div class="rate-unit">p.a. onwards</div></div>
+      <div class="rate-card"><div class="rate-bank">Kotak Mahindra</div><div class="rate-val">8.25%</div><div class="rate-unit">p.a. onwards</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:24px">📌 All floating loans linked to EBLR (Repo + Spread). CIBIL 750+ critical for best starting rates. Future RBI cuts auto-pass through to borrowers.</div>
+
+    <div class="section-title" style="margin-bottom:14px"><span class="ico">📋</span> Policy Updates &amp; Broker Action Points</div>
+    <div class="policy-grid" id="policy-grid"></div>
+  </section>
+
+  <!-- ══ PAGE 4: TRANSIT MILESTONES ══ -->
+  <section class="page" id="page-transit">
+    <div class="page-header">
+      <div class="page-title"><span class="icon">🚇</span> Transit Milestones</div>
+      <div class="page-subtitle">Infrastructure projects impacting Pune real estate — Metro, Ring Road, Highways · May 2026</div>
+    </div>
+
+    <!-- MILESTONES OVERVIEW -->
+    <div class="milestone-grid">
+      <div class="milestone-item"><div class="m-status m-done">✅ Operational</div><div class="m-label">Metro Phase 1</div><div class="m-sub">PCMC–Swargate, Vanaz–Ramwadi fully live</div></div>
+      <div class="milestone-item"><div class="m-status m-progress">🔄 94% Complete</div><div class="m-label">Metro Line 3</div><div class="m-sub">Hinjewadi–Shivajinagar — inauguration imminent</div></div>
+      <div class="milestone-item"><div class="m-status m-planned">📐 Survey/Tender</div><div class="m-label">Metro Phase 2</div><div class="m-sub">Khadakwasla–Kharadi, Wagholi extension</div></div>
+      <div class="milestone-item"><div class="m-status m-progress">🔄 Under Construction</div><div class="m-label">Pune Ring Road</div><div class="m-sub">Connecting 4 major national highways</div></div>
+      <div class="milestone-item"><div class="m-status m-done">✅ Operational</div><div class="m-label">Aundh–Ravet BRTS</div><div class="m-sub">Bus Rapid Transit corridor active</div></div>
+      <div class="milestone-item"><div class="m-status m-progress">🔄 Expanding</div><div class="m-label">Pune–Mumbai Exp.</div><div class="m-sub">Gahunje–Talegaon corridor development</div></div>
+    </div>
+
+    <!-- METRO LINE 3 -->
+    <div class="transit-card">
+      <div class="transit-head">
+        <div>
+          <div class="transit-title">🚇 Pune Metro — Line 3 (Hinjewadi–Shivajinagar)</div>
+          <div class="transit-subtitle">23.4 km · 23 stations · IT Hub connector · Inauguration imminent</div>
+        </div>
+        <span class="tag tag-blue">94% Done</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Construction Progress</span><span style="color:var(--accent2);font-weight:700">94%+</span></div>
+        <div class="progress-bg"><div class="progress-fill" style="width:94%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div>
+      </div>
+      <div class="transit-zones">
+        <span class="zone-tag">Hinjewadi Phase I</span><span class="zone-tag">Hinjewadi Phase II</span><span class="zone-tag">Hinjewadi Phase III</span><span class="zone-tag">Wakad</span><span class="zone-tag">Balewadi</span><span class="zone-tag">Aundh</span><span class="zone-tag">Shivajinagar</span>
+      </div>
+      <div class="transit-impact">🏠 <strong>Broker Script:</strong> "Metro Line 3 is 94% done — inauguration is imminent. Every metro corridor in India surged 15–20% post-opening. Mumbai proved it. Bengaluru proved it. Pune is next. Buy within 1km of a station before it opens — after inauguration, the premium is baked in."</div>
+    </div>
+
+    <!-- RING ROAD -->
+    <div class="transit-card">
+      <div class="transit-head">
+        <div>
+          <div class="transit-title">🛣️ Pune Ring Road — The Next Big Catalyst</div>
+          <div class="transit-subtitle">Connects Mumbai–Pune Expressway, Pune–Nashik, Pune–Solapur, Pune–Bangalore highways</div>
+        </div>
+        <span class="tag tag-gold">Under Construction</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Corridor Appreciation Since Announcement</span><span style="color:var(--gold);font-weight:700">12–18% YoY</span></div>
+        <div class="progress-bg"><div class="progress-fill" style="width:65%;background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div></div>
+      </div>
+      <div class="transit-zones">
+        <span class="zone-tag">Pirangut</span><span class="zone-tag">Mulshi</span><span class="zone-tag">Urse</span><span class="zone-tag">Wagholi</span><span class="zone-tag">Kharadi</span><span class="zone-tag">Manjri</span><span class="zone-tag">Chakan</span><span class="zone-tag">Talegaon</span>
+      </div>
+      <div class="transit-impact">💰 <strong>Projected:</strong> 25–30% cumulative appreciation on completion. <strong>2025–2026 is the critical entry window.</strong> Best investor pitch for Chakan, Wagholi, Pirangut — entry still under ₹70L. "You're buying during construction, not after inauguration. That's where the money is made."</div>
+    </div>
+
+    <!-- METRO PHASE 2 -->
+    <div class="transit-card">
+      <div class="transit-head">
+        <div>
+          <div class="transit-title">🚇 Pune Metro — Phase 2 (Kharadi Extension + Wagholi)</div>
+          <div class="transit-subtitle">Survey & tender stage · Expected completion 2029–30</div>
+        </div>
+        <span class="tag tag-teal">Survey Stage</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Planning Progress</span><span style="color:var(--teal);font-weight:700">20%</span></div>
+        <div class="progress-bg"><div class="progress-fill" style="width:20%;background:linear-gradient(90deg,#14b8a6,#2dd4bf)"></div></div>
+      </div>
+      <div class="transit-zones">
+        <span class="zone-tag">Khadakwasla</span><span class="zone-tag">Kharadi</span><span class="zone-tag">Wagholi</span><span class="zone-tag">Double-decker flyover corridor</span>
+      </div>
+      <div class="transit-impact">📍 <strong>Early Buyer Opportunity:</strong> Phase 2 will connect Kharadi–Wagholi. Properties near proposed stations in Kharadi and Wagholi are early-stage investment picks — same play as Hinjewadi Phase 1 was in 2020.</div>
+    </div>
+
+    <!-- TOD POLICY -->
+    <div class="brief-card">
+      <div class="brief-heading">🏙️ TOD (Transit-Oriented Development) Zones — What Brokers Need to Know</div>
+      <ul class="brief-list">
+        <li class="brief-item"><div class="brief-dot dot-teal"></div><span><strong style="color:var(--text)">Higher FSI Within 500m of Metro Stations:</strong> PMC's DP 2041 grants higher Floor Space Index (FSI) and permits mixed-use development in TOD zones. More buildable space = future supply surge in these areas.</span></li>
+        <li class="brief-item"><div class="brief-dot dot-blue"></div><span><strong style="color:var(--text)">10–25% Annual Appreciation Near Metro:</strong> Properties within 500m–1km of operational metro stations are showing 10–25% YoY appreciation — outperforming the city average of 5–12%.</span></li>
+        <li class="brief-item"><div class="brief-dot dot-gold"></div><span><strong style="color:var(--text)">UDCPR Extended to Full PMRDA:</strong> Unified Development Control and Promotion Regulations now apply across the entire Pune Metropolitan Region — standardizes approvals and development norms city-wide.</span></li>
+        <li class="brief-item"><div class="brief-dot dot-green"></div><span><strong style="color:var(--text)">Broker Play:</strong> Near-ready inventory in TOD zones (Aundh, Balewadi, Kharadi, Hadapsar) offers best current value before the post-inauguration premium and post-approval supply surge.</span></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// ── DATA ──
+const markets = [
+  {locality:"Balewadi",profile:"High Street",std:"₹12,500 – 15,500",lux:"₹16,000 – 17,900+",appr:11.5,apprNum:11.5,drivers:"Balewadi High Street, Metro closeness"},
+  {locality:"Baner",profile:"Premium West",std:"₹9,500 – 14,500",lux:"₹18,000 – 22,000+",appr:12.4,apprNum:12.4,drivers:"Baner Hill scenery, High IT density"},
+  {locality:"Hinjewadi",profile:"IT-Hub West",std:"₹8,000 – 10,000",lux:"₹11,000 – 14,000+",appr:10.0,apprNum:10.0,drivers:"Phase 1 Metro (Launches June '25)"},
+  {locality:"Wakad",profile:"Mid-Premium",std:"₹8,500 – 11,500",lux:"₹12,800 – 20,000+",appr:10.2,apprNum:10.2,drivers:"Proximity to Hinjewadi & highway"},
+  {locality:"Kharadi",profile:"IT-Hub East",std:"₹10,500 – 13,500",lux:"₹15,000 – 21,000+",appr:7.2,apprNum:7.2,drivers:"EON IT Park, World Trade Centre"},
+  {locality:"Viman Nagar",profile:"Premium East",std:"₹12,850 – 14,580",lux:"₹17,800 – 21,000+",appr:6.5,apprNum:6.5,drivers:"Fully mature posh neighbourhood"},
+  {locality:"Ravet",profile:"Emerging West",std:"₹6,000 – 9,500",lux:"₹10,000 – 11,000+",appr:6.0,apprNum:6.0,drivers:"Expressway proximity, Fintech hub"},
+  {locality:"Mahalunge",profile:"Fast-Rising",std:"₹9,000 – 13,000",lux:"₹13,500 – 16,000+",appr:14.0,apprNum:14.0,drivers:"VTP township, Metro TOD zone"},
+  {locality:"Hadapsar",profile:"IT-Mixed",std:"₹7,500 – 12,000",lux:"₹12,000 – 15,000+",appr:8.5,apprNum:8.5,drivers:"Amanora township, Magarpatta city"},
+  {locality:"Wagholi",profile:"Affordable East",std:"₹6,000 – 9,500",lux:"₹9,500 – 12,000+",appr:9.0,apprNum:9.0,drivers:"Ring Road corridor, IT overflow"},
+  {locality:"Undri / Pisoli",profile:"Affordable South",std:"₹5,500 – 9,000",lux:"₹9,000 – 11,000+",appr:9.5,apprNum:9.5,drivers:"NIBM Road, South Pune expansion"},
+  {locality:"Koregaon Park",profile:"Ultra Luxury",std:"₹14,000 – 18,000",lux:"₹18,000 – 25,000+",appr:6.0,apprNum:6.0,drivers:"Adani Realty, Marvel luxury tier"},
+  {locality:"Kalyani Nagar",profile:"Premium Luxury",std:"₹12,000 – 16,000",lux:"₹16,000 – 22,000+",appr:7.0,apprNum:7.0,drivers:"Nyati Evoque, Bramhacorp Collection"},
+  {locality:"Punawale / Tathawade",profile:"Mid-West",std:"₹7,500 – 11,000",lux:"₹11,000 – 14,000+",appr:10.5,apprNum:10.5,drivers:"Hinjewadi overflow, BRTS corridor"},
+  {locality:"Pimpri-Chinchwad",profile:"Industrial-Resi",std:"₹6,500 – 10,000",lux:"₹10,000 – 13,000+",appr:9.5,apprNum:9.5,drivers:"PCMC IT parks, Mahindra Citadel"},
+  {locality:"NIBM Road",profile:"South Premium",std:"₹10,000 – 14,000",lux:"₹14,000 – 18,000+",appr:7.5,apprNum:7.5,drivers:"Quiet luxury, NIBM schools"},
+];
+
+const projects = [
+  {name:"Godrej The Gale",dev:"Godrej Properties",loc:"Hinjewadi",zone:"hinjewadi",config:"1–5.5 BHK",price:"₹71L – ₹2.5Cr+",pos:"2027–28",type:"premium"},
+  {name:"Godrej Park World",dev:"Godrej Properties",loc:"Hinjewadi Phase 1",zone:"hinjewadi",config:"1,2,3 BHK",price:"From ₹71L",pos:"2027",type:"premium"},
+  {name:"Hiranandani Hinjewadi Township",dev:"Hiranandani + Krisala",loc:"North Hinjewadi",zone:"hinjewadi",config:"2,3,4 BHK + Villas",price:"From ₹75.99L",pos:"2027–29",type:"premium"},
+  {name:"Kohinoor Central Park",dev:"Kohinoor Group",loc:"Hinjewadi Phase 2",zone:"hinjewadi",config:"2,3 BHK Duplex",price:"₹88L – ₹1.48Cr",pos:"2027",type:"premium"},
+  {name:"Kolte-Patil 24K Sereno",dev:"Kolte-Patil Developers",loc:"Baner",zone:"baner",config:"2,3 BHK",price:"₹1.2Cr+",pos:"2027",type:"premium"},
+  {name:"Rohan Ekam",dev:"Rohan Builders",loc:"Balewadi, Mula River",zone:"baner",config:"2,3,4 BHK",price:"₹1.3Cr – ₹3Cr+",pos:"2027",type:"premium"},
+  {name:"Lodha Altero",dev:"Lodha Group",loc:"Wakad",zone:"baner",config:"2,3 BHK",price:"₹1Cr – ₹1.8Cr",pos:"2027",type:"premium"},
+  {name:"Mahindra Happinest",dev:"Mahindra Lifespaces",loc:"Tathawade",zone:"baner",config:"1,2 BHK",price:"₹45L – ₹85L",pos:"2026",type:"affordable"},
+  {name:"Kohinoor Punawale",dev:"Kohinoor Group",loc:"Punawale",zone:"baner",config:"2,3 BHK",price:"From ₹70.9L",pos:"2027",type:"affordable"},
+  {name:"VTP Altair",dev:"VTP Realty",loc:"Kharadi",zone:"kharadi",config:"2,3,4 BHK",price:"₹1.3Cr – ₹2.5Cr",pos:"2027–28",type:"premium"},
+  {name:"Godrej River Crest",dev:"Godrej Properties",loc:"Kharadi",zone:"kharadi",config:"3,4 BHK",price:"₹1.89Cr – ₹2.5Cr",pos:"2028",type:"premium"},
+  {name:"Mahindra IvyLush",dev:"Mahindra Lifespaces",loc:"Kharadi Annex",zone:"kharadi",config:"2,3,4 BHK",price:"₹1.5Cr – ₹3Cr",pos:"2027",type:"premium"},
+  {name:"Prestige Exora Business Parks",dev:"Prestige Group",loc:"Kharadi IT Park",zone:"kharadi",config:"Grade-A Office",price:"On Request",pos:"2029",type:"commercial"},
+  {name:"Kolte-Patil Springshire",dev:"Kolte-Patil Developers",loc:"Wagholi",zone:"east",config:"2,3 BHK",price:"₹70L – ₹1.2Cr",pos:"2027",type:"affordable"},
+  {name:"Godrej Emerald Waters",dev:"Godrej Properties",loc:"Pimpri-Chinchwad",zone:"east",config:"2,3,4 BHK",price:"₹1.28Cr – ₹2.59Cr",pos:"2028",type:"premium"},
+  {name:"Amanora Crown Towers",dev:"Amanora",loc:"Hadapsar",zone:"east",config:"2,3,4 BHK",price:"₹1.2Cr – ₹2.5Cr",pos:"2026–27",type:"premium"},
+  {name:"Shapoorji Pallonji Everra",dev:"Shapoorji Pallonji",loc:"Manjri",zone:"east",config:"3,4 BHK",price:"₹1.8Cr – ₹3.5Cr",pos:"2027–28",type:"premium"},
+  {name:"Nyati Esteban II",dev:"Nyati Group",loc:"Undri",zone:"south",config:"2,3 BHK",price:"₹75L – ₹1.2Cr",pos:"2027",type:"affordable"},
+  {name:"Kumar Palmspring Towers",dev:"Kumar Properties",loc:"Undri",zone:"south",config:"2,3 BHK",price:"₹80L – ₹1.4Cr",pos:"2027",type:"affordable"},
+  {name:"Tribeca Yoo One",dev:"Tribeca Developers",loc:"NIBM Road",zone:"south",config:"3,4,5 BHK",price:"₹1.5Cr – ₹3.5Cr",pos:"2028",type:"luxury"},
+  {name:"The Vastion",dev:"Shapoorji Pallonji",loc:"Hadapsar Annexe",zone:"south",config:"Villas · Villaments",price:"₹4Cr – ₹10Cr+",pos:"2028",type:"luxury"},
+  {name:"Adani Atelier Greens",dev:"Adani Realty",loc:"Koregaon Park",zone:"luxury",config:"2,2.5,3 BHK",price:"₹14,000–22,000/sqft",pos:"2027–28",type:"luxury"},
+  {name:"Marvel Basilo",dev:"Marvel Realtors",loc:"Koregaon Park Lane 5",zone:"luxury",config:"3,3.5,4.5 BHK",price:"₹1.8Cr – ₹10Cr+",pos:"2028",type:"luxury"},
+  {name:"Nyati Elenor",dev:"Nyati Group",loc:"Lulla Nagar",zone:"luxury",config:"3–6 BHK",price:"₹4.8Cr – ₹9.66Cr",pos:"2028",type:"luxury"},
+  {name:"Birla Punya",dev:"Birla Estates",loc:"Sangamwadi",zone:"luxury",config:"1,2,3,4 BHK",price:"₹1.2Cr – ₹4Cr+",pos:"2028",type:"luxury"},
+  {name:"Panchshil 57 Avenue",dev:"Panchshil Realty",loc:"Mundhwa",zone:"luxury",config:"3.5,4.5 BHK",price:"₹4.5Cr – ₹8Cr",pos:"Dec 2032",type:"luxury"},
+  {name:"VTP Earth 1",dev:"VTP Realty",loc:"Mahalunge",zone:"baner",config:"3,4 BHK Duplex",price:"₹1.9Cr – ₹2.48Cr",pos:"2027–28",type:"premium"},
+  {name:"Pharande Felicity",dev:"Pharande Spaces",loc:"Ravet",zone:"baner",config:"1,2,3 BHK",price:"₹50L – ₹1.1Cr",pos:"2026–27",type:"affordable"},
+];
+
+const policies = [
+  {title:"RBI Cuts Repo to 5.25% — EMIs at 4-Year Low",date:"Dec 2025",color:"#14b8a6",tag:"Buyer Positive",tagClass:"tag-teal",body:"75bps cumulative cuts in 2025: June (50bps→5.50%) + December (25bps→5.25%). HDFC from 7.20%, SBI from 7.25%, ICICI from 7.45%. Floating-rate loans auto-adjust downward.",tip:"EMI on ₹60L (20yr) dropped from ~₹53K to ~₹46K vs 2023. Savings: ₹84,000/year. Show this calculation to every fence-sitter."},
+  {title:"Stamp Duty — Women Save 1%, 3-Year Resale Rule",date:"FY 2025–26",color:"#3b82f6",tag:"Status Quo",tagClass:"tag-blue",body:"Pune: 7% men / 6% women + 1% registration (capped ₹30K). 3-year resale: stamp duty only on price differential. Senior living: flat ₹1,000 stamp duty.",tip:"Women save ₹80,000+ on ₹80L property. The 3-year resale rule removes the #1 investor objection — 'what if I need to sell early?'"},
+  {title:"MahaRERA - 1,905+ Projects Suspended",date:"Apr-Nov 2025",color:"#8b5cf6",tag:"Regulatory",tagClass:"tag-purple",body:"Mandatory QR codes on all ads (₹50K penalty). MahaRERA suspended 1,905+ projects state-wide in a major compliance sweep (with Pune leading the breakdown), bank accounts frozen. Circular 50/2025: cancellation SOP for allottee defaults.",tip:"Scan QR on every project ad before recommending. Visit maharera.mahaonline.gov.in before each client meeting. This alone builds more trust than any sales pitch."},
+  {title:"PMAY-U 2.0 — Up to ₹2.67L Subsidy Active",date:"2025 onwards",color:"#f59e0b",tag:"Govt Scheme",tagClass:"tag-gold",body:"EWS (≤₹3L), LIG (₹3–6L), MIG (up to ₹9L) eligible. Must not own pucca house anywhere in India. Women-headed households preferred.",tip:"Ask income in the FIRST client call. Under ₹9L = PMAY eligible. Guide to pmaymis.gov.in. This creates a loyal, high-referral first-time buyer pipeline."},
+  {title:"GST 2.0 — Ready-to-Move Saves ₹4L+ on ₹80L Property",date:"Sept 22, 2025",color:"#22c55e",tag:"Tax Update",tagClass:"tag-green",body:"Core buyer GST unchanged: 1% affordable u/c, 5% non-affordable u/c, 0% ready-to-move. Cement GST 28%→18% — lower developer costs, may moderate future price hikes.",tip:"0% GST on ready-to-move = ₹4L saved on ₹80L property. Lead with this for any buyer comparing under-construction vs ready. It's a major closing argument."},
+  {title:"Maharashtra 'Majhe Ghar, Majha Adhikar' — 35L Homes",date:"Budget 2025",color:"#f43f5e",tag:"State Policy",tagClass:"tag-rose",body:"35 lakh affordable homes target by 2030. ₹70,000Cr investment framework. Self-Redevelopment Cell (₹2,000Cr). AI-powered SHIP portal. Faster approvals, PPP model.",tip:"Track MHADA/CIDCO lottery announcements for your affordable buyer pipeline. SHIP portal launches = better data access for brokers."},
+  {title:"PMC TDR Reforms — 90-Day Approval, TOD Zones",date:"2025–26",color:"#60a5fa",tag:"Development",tagClass:"tag-blue",body:"TDR processing: 90-day deadline, documents cut 40→20. TOD zones: higher FSI + mixed-use within 500m of metro stations. UDCPR standardized across PMRDA.",tip:"Near-ready inventory in TOD zones (Aundh, Kharadi, Hadapsar) offers best current value before the post-approval supply surge."},
+  {title:"Ring Road — 12–18% YoY, 25–30% Cumulative Projected",date:"2025–26",color:"#fbbf24",tag:"Infrastructure",tagClass:"tag-gold",body:"Connects all 4 major highways. Key zones: Pirangut, Wagholi, Kharadi, Chakan, Talegaon seeing 12–18% annual appreciation since announcement.",tip:"2025–2026 is the critical entry window. Best investor pitch: 'Entry now, exit post-completion at 25–30% gain.' Still under ₹70L in Chakan/Pirangut."},
+  {title:"SRA Cluster Scheme — FSI Above 4 for 50+ Acre Slums",date:"Oct–Nov 2025",color:"#a78bfa",tag:"SRA",tagClass:"tag-purple",body:"New Cluster Scheme for 50+ acre slums: FSI above 4. Proposal window cut 120→60 days. Section 33-B: directors personally liable for unpaid transit rent.",tip:"Verify free-sale freeze compliance in any SRA project before recommending. New rules make SRA free-sale flats significantly safer than pre-2025."},
+];
+
+
+// ── CHECKOUT LOGIC ──
+function openCheckout() {
+  document.getElementById('checkout-modal').style.display = 'flex';
+}
+function closeCheckout() {
+  document.getElementById('checkout-modal').style.display = 'none';
+}
+let currentPlan = 99;
+function selectPlan(price, el) {
+  document.querySelectorAll('.plan-tab').forEach(t=>{
+    t.style.background = 'transparent';
+    t.style.borderColor = '#334155';
+  });
+  el.style.background = 'rgba(59,130,246,0.1)';
+  el.style.borderColor = '#3b82f6';
+  currentPlan = price;
+  document.getElementById('btn-pay').innerText = `Pay ₹${price} & Subscribe`;
+}
+
+function switchPayTab(id, el) {
+  document.querySelectorAll('.pay-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.pay-content').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('pay-'+id).classList.add('active');
+}
+
+async function processPayment() {
+  const name = document.getElementById('sub-name').value;
+  const email = document.getElementById('sub-email').value;
+  if(!name || !email || !email.includes('@')) {
+    alert("Please enter a valid name and email.");
+    return;
+  }
+  
+  const btn = document.getElementById('btn-pay');
+  btn.classList.add('loading');
+  btn.innerText = "Processing Payment...";
+  
+  // Simulate payment gateway delay
+  setTimeout(async () => {
+    btn.innerText = "Verifying...";
+    
+    // Call backend API
+    try {
+      const res = await fetch(`${API}/subscribe`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({name, email})
+      });
+      const data = await res.json();
+      if(data.status === 'ok') {
+        btn.style.background = '#22c55e';
+        btn.innerText = "Payment Successful! ✓";
+        setTimeout(() => {
+          closeCheckout();
+          btn.style.background = '#3b82f6';
+          btn.innerText = `Pay ₹${currentPlan} & Subscribe`;
+          btn.classList.remove('loading');
+          alert(`Welcome aboard, ${name}! You will now receive the daily email at ${email}.`);
+        }, 1500);
+      } else {
+        throw new Error("Backend error");
+      }
+    } catch(e) {
+      btn.innerText = "Error! Try Again.";
+      btn.style.background = '#ef4444';
+      setTimeout(() => {
+        btn.style.background = '#3b82f6';
+        btn.innerText = `Pay ₹${currentPlan} & Subscribe`;
+        btn.classList.remove('loading');
+      }, 2000);
+    }
+  }, 2000);
+}
+
+// ── RENDER MARKETS ──
+
+let sortCol = 0, sortDir = 1;
+let allMarkets = [...markets];
+
+function apprClass(n){return n>=10?'appr-high':n>=7?'appr-med':'appr-low'}
+
+function renderMarkets(){
+  const q = document.getElementById('market-search').value.toLowerCase();
+  const f = document.getElementById('appr-filter').value;
+  const c = document.getElementById('city-filter') ? document.getElementById('city-filter').value : 'all';
+  let data = allMarkets.filter(m => {
+    const matchC = c === 'all' || (m.city && m.city.toLowerCase() === c);
+    const matchQ = !q || m.locality.toLowerCase().includes(q)||m.profile.toLowerCase().includes(q)||m.drivers.toLowerCase().includes(q);
+    const matchF = f==='all'||(f==='high'&&m.apprNum>=10)||(f==='med'&&m.apprNum>=7&&m.apprNum<10)||(f==='low'&&m.apprNum<7);
+    return matchC && matchQ && matchF;
+  });
+  data.sort((a,b)=>{
+    let av,bv;
+    if(sortCol===0){av=a.locality;bv=b.locality}
+    else if(sortCol===1){av=a.profile;bv=b.profile}
+    else if(sortCol===2){av=parseFloat(a.std.replace(/[^\d]/g,''));bv=parseFloat(b.std.replace(/[^\d]/g,''))}
+    else if(sortCol===3){av=parseFloat(a.lux.replace(/[^\d]/g,''));bv=parseFloat(b.lux.replace(/[^\d]/g,''))}
+    else if(sortCol===4){av=a.apprNum;bv=b.apprNum}
+    if(typeof av==='string') return av.localeCompare(bv)*sortDir;
+    return (av-bv)*sortDir;
+  });
+  document.getElementById('market-tbody').innerHTML = data.map(m=>`
+    <tr>
+      <td style="color:#94a3b8">${m.city || ''}</td>
+      <td class="td-locality">${m.locality}</td>
+      <td class="td-profile">${m.profile}</td>
+      <td class="td-rate">${m.std}</td>
+      <td class="td-rate">${m.lux}</td>
+      <td class="td-appr ${apprClass(m.apprNum)}">${m.appr}%</td>
+      <td class="td-drivers">${m.drivers}</td>
+    </tr>`).join('');
+}
+function filterMarkets(){renderMarkets()}
+
+function sortTable(col){
+  const ths = document.querySelectorAll('#market-table thead th');
+  ths.forEach((th,i)=>{
+    th.classList.toggle('sorted',i===col);
+    if(i===col) th.querySelector('.sort-arrow').textContent = sortDir===1?'▼':'▲';
+    else if(th.querySelector('.sort-arrow')) th.querySelector('.sort-arrow').textContent='↕';
+  });
+  if(sortCol===col) sortDir*=-1; else {sortCol=col;sortDir=1;}
+  renderMarkets();
+}
+
+// ── RENDER PROJECTS ──
+const typeMap={premium:{badge:"badge-premium",text:"PREMIUM LAUNCH"},luxury:{badge:"badge-luxury",text:"LUXURY LAUNCH"},affordable:{badge:"badge-affordable",text:"AFFORDABLE"},commercial:{badge:"badge-commercial",text:"COMMERCIAL"},};
+const cardClass={premium:"premium",luxury:"luxury",affordable:"affordable",commercial:"premium"};
+
+function renderProjects(){
+  const q = document.getElementById('proj-search').value.toLowerCase();
+  const f = document.getElementById('proj-filter').value;
+  let data = projects.filter(p=>{
+    const matchQ = !q||p.name.toLowerCase().includes(q)||p.dev.toLowerCase().includes(q)||p.loc.toLowerCase().includes(q);
+    const matchF = f==='all'||p.zone===f;
+    return matchQ && matchF;
+  });
+  document.getElementById('projects-grid').innerHTML = data.map(p=>`
+    <div class="proj-card ${cardClass[p.type]||'premium'}">
+      <div class="proj-card-top">
+        <div>
+          <div class="proj-name">${p.name}</div>
+          <div class="proj-dev">${p.dev}</div>
+        </div>
+        <div class="proj-badge ${typeMap[p.type]?.badge||'badge-premium'}">${typeMap[p.type]?.text||'LAUNCH'}</div>
+      </div>
+      <div class="proj-meta">
+        <div class="proj-meta-item"><div class="proj-meta-label">Price</div><div class="proj-meta-val" style="font-size:11px">${p.price}</div></div>
+        <div class="proj-meta-item"><div class="proj-meta-label">Possession</div><div class="proj-meta-val" style="font-size:11px">${p.pos}</div></div>
+        <div class="proj-meta-item" style="grid-column:1/-1"><div class="proj-meta-label">Config</div><div class="proj-meta-val" style="font-size:11px">${p.config}</div></div>
+      </div>
+      <div class="proj-location">📍 ${p.loc}</div>
+      <div class="proj-rera"><span class="rera-ok">✅ RERA Registered</span></div>
+    </div>`).join('');
+}
+function filterProjects(){renderProjects()}
+
+// ── RENDER POLICIES ──
+function renderPolicies(){
+  document.getElementById('policy-grid').innerHTML = policies.map(p=>`
+    <div class="policy-card">
+      <div class="policy-accent" style="background:${p.color}"></div>
+      <div class="policy-head">
+        <div style="padding-left:10px">
+          <div class="policy-title">${p.title}</div>
+          <div class="policy-date">${p.date}</div>
+        </div>
+        <span class="tag ${p.tagClass}" style="flex-shrink:0">${p.tag}</span>
+      </div>
+      <div class="policy-body">${p.body}</div>
+      <div class="policy-tip"><strong>Broker Tip:</strong> ${p.tip}</div>
+    </div>`).join('');
+}
+
+// ── PAGE NAVIGATION ──
+function showPage(id, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── INIT & LIVE API ──
+const API = 'http://localhost:5000/api';
+
+async function fetchLiveData() {
+  try {
+    const res = await fetch(`${API}/data`, {signal: AbortSignal.timeout(3000)});
+    if (!res.ok) throw new Error('Server not running');
+    const data = await res.json();
+
+    // Update markets from live data
+    if (data.markets && data.markets.length > 0) {
+      allMarkets = data.markets.map(m => ({
+        city: m.city || 'Unknown',
+        locality: m.locality, profile: m.profile,
+        std: m.standard, lux: m.luxury,
+        appr: m.appr, apprNum: m.appr, drivers: m.drivers
+      }));
+    }
+
+    // Update sidebar
+    const updated = data.last_updated || 'Unknown';
+    const fresh   = data.data_fresh;
+    document.getElementById('last-updated-label').textContent = `Updated: ${updated.split(' ')[0]}`;
+    document.getElementById('data-source-label').textContent  = fresh ? '🟢 Live Data' : '📦 Cached Data';
+    const banner = document.getElementById('live-banner');
+    if (fresh) {
+      banner.style.background = 'rgba(20,184,166,0.1)';
+      banner.style.color = '#2dd4bf';
+      banner.textContent = '🟢 Server connected — Live data';
+    } else {
+      banner.style.background = 'rgba(245,158,11,0.1)';
+      banner.style.color = '#fbbf24';
+      banner.textContent = '📦 Server connected — Cached data';
+    }
+
+    renderMarkets();
+    renderProjects();
+    renderPolicies();
+    console.log('[Dashboard] Live data loaded from server');
+  } catch(e) {
+    // Server not running — use built-in data, show offline notice
+    document.getElementById('last-updated-label').textContent = 'Updated: 24 May 2026';
+    document.getElementById('data-source-label').textContent  = 'Source: Built-in data';
+    const banner = document.getElementById('live-banner');
+    banner.style.background = 'rgba(244,63,94,0.08)';
+    banner.style.color = '#fb7185';
+    banner.textContent = '⚠️ Server offline — Run start.bat to enable live data';
+    renderMarkets();
+    renderProjects();
+    renderPolicies();
+    console.log('[Dashboard] Server offline — using built-in data');
+  }
+}
+
+async function triggerRefresh() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('spinning');
+  btn.innerHTML = '<span class="r-icon">🔄</span> Refreshing...';
+  try {
+    const res = await fetch(`${API}/refresh`, {signal: AbortSignal.timeout(60000)});
+    const data = await res.json();
+    if (data.status === 'ok') {
+      btn.innerHTML = data.email_sent
+        ? '<span class="r-icon">✅</span> Done! Email Sent'
+        : '<span class="r-icon">✅</span> Refreshed (Email failed)';
+      setTimeout(() => fetchLiveData(), 1000);
+    } else {
+      btn.innerHTML = '<span class="r-icon">❌</span> Error — check server';
+    }
+  } catch(e) {
+    btn.innerHTML = '<span class="r-icon">⚠️</span> Server offline';
+  }
+  btn.classList.remove('spinning');
+  setTimeout(() => { btn.innerHTML = '<span class="r-icon">🔄</span> Refresh & Send Email'; }, 4000);
+}
+
+// ── STARTUP ──
+fetchLiveData();
+// Auto-refresh every 60 minutes
+setInterval(fetchLiveData, 60 * 60 * 1000);
+
+</script>
+</body>
+</html>
