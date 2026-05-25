@@ -34,7 +34,7 @@ def status():
 @app.route("/api/refresh")
 def refresh():
     return jsonify({
-        "message": "Refresh temporarily disabled for deployment testing"
+        "message": "Refresh temporarily disabled"
     })
 
 @app.route("/api/subscribe", methods=["POST"])
